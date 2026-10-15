@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information Management System | Cloud Computing CA2</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="header">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🎓</div>
+        <div class="brand-text">
+          <h1>SIMS Dashboard</h1>
+          <p>Cloud Computing CA2 — Three-Tier Architecture</p>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link active">Dashboard</a></li>
+        <li><a href="students.html" class="nav-link">Students Directory</a></li>
+        <li><a href="add-student.html" class="nav-link">Add Student</a></li>
+      </ul>
+      <div id="backend-status-pill" class="backend-status-pill">
+        <span class="status-dot"></span>
+        <span id="backend-status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Three-Tier Architecture Banner -->
+    <section class="arch-banner">
+      <div class="arch-banner-text">
+        <h3>Three-Tier Cloud Web Architecture</h3>
+        <p>Demonstrating decoupled separation of presentation, business logic, and cloud database.</p>
+      </div>
+      <div class="tiers-badges">
+        <div class="tier-badge">
+          <strong>Tier 1 • Presentation</strong>
+          <span>Netlify (HTML5, CSS3, JS)</span>
+        </div>
+        <div class="tier-badge">
+          <strong>Tier 2 • Application</strong>
+          <span>Render (Node.js & Express)</span>
+        </div>
+        <div class="tier-badge">
+          <strong>Tier 3 • Database</strong>
+          <span>MongoDB Atlas (studentDB)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page Header & Quick Actions -->
+    <div class="page-header">
+      <div class="page-title">
+        <h2>System Overview</h2>
+        <p>Real-time statistics fetched from the Render REST API and MongoDB Atlas cluster.</p>
+      </div>
+      <div class="page-actions">
+        <a href="add-student.html" class="btn btn-primary">+ Add New Student</a>
+        <a href="students.html" class="btn btn-secondary">View All Records</a>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3 id="stat-total-students">--</h3>
+          <p>Total Registered Students</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏛️</div>
+        <div class="stat-info">
+          <h3 id="stat-total-departments">6</h3>
+          <p>Academic Departments</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-info">
+          <h3 id="stat-db-status">Checking...</h3>
+          <p>Database Health (Atlas)</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-info">
+          <h3 id="stat-api-uptime">--</h3>
+          <p>API Server Uptime</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Students Table -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">Recently Added Students</h3>
+        <a href="students.html" class="btn btn-secondary btn-sm">Full Directory &rarr;</a>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Full Name</th>
+              <th>Department</th>
+              <th>Semester</th>
+              <th>Contact</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recent-students-tbody">
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2rem;">
+                <div class="spinner"></div>
+                <p style="margin-top: 0.5rem; color: var(--slate-400);">Connecting to backend REST API...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Student Information Management System &bull; Cloud Computing CA2 Practical &bull; Antigravity Assisted</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Load Dashboard Overview Data
+    document.addEventListener('DOMContentLoaded', async () => {
+      const statusPill = document.getElementById('backend-status-pill');
+      const statusText = document.getElementById('backend-status-text');
+      const statTotal = document.getElementById('stat-total-students');
+      const statDb = document.getElementById('stat-db-status');
+      const statUptime = document.getElementById('stat-api-uptime');
+      const tbody = document.getElementById('recent-students-tbody');
+
+      // 1. Check API & DB Health
+      try {
+        const health = await StudentAPI.checkHealth();
+        if (health && health.success) {
+          statusPill.className = 'backend-status-pill online';
+          statusText.textContent = 'Backend: Online';
+          statDb.textContent = 'Connected';
+          statDb.style.color = 'var(--success)';
+          const seconds = health.data?.uptimeSeconds || 0;
+          statUptime.textContent = seconds > 60 ? `${Math.floor(seconds / 60)}m` : `${seconds}s`;
+        } else {
+          throw new Error('Health check failed');
+        }
+      } catch (err) {
+        statusPill.className = 'backend-status-pill offline';
+        statusText.textContent = 'Backend: Offline';
+        statDb.textContent = 'Disconnected';
+        statDb.style.color = 'var(--danger)';
+        statUptime.textContent = 'N/A';
+      }
+
+      // 2. Fetch Recent Students
+      try {
+        const response = await StudentAPI.getStudents({ limit: 5 });
+        statTotal.textContent = response.total ?? response.count ?? 0;
+
+        if (!response.data || response.data.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 2rem; color: var(--slate-400);">
+                No student records found in MongoDB Atlas. Click "+ Add New Student" to get started!
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = response.data.map(student => `
+          <tr>
+            <td><strong>${escapeHTML(student.studentId)}</strong></td>
+            <td>${escapeHTML(student.name)}</td>
+            <td><span class="badge-dept">${escapeHTML(student.department)}</span></td>
+            <td>Semester ${escapeHTML(student.semester)}</td>
+            <td>${escapeHTML(student.contact)}</td>
+            <td>
+              <div class="table-actions">
+                <a href="students.html" class="btn btn-secondary btn-sm">View in Directory</a>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--danger);">
+              ${escapeHTML(err.message)}
+            </td>
+          </tr>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

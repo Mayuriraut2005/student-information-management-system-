@@ -1,0 +1,37 @@
+{
+  "name": "student-information-management-system-backend",
+  "version": "1.0.0",
+  "description": "Application Tier REST API for Student Information Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest --runInBand --detectOpenHandles --forceExit"
+  },
+  "keywords": [
+    "cloud-computing",
+    "three-tier-architecture",
+    "express",
+    "mongodb",
+    "render",
+    "rest-api"
+  ],
+  "author": "CSE Student",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 15000
+  }
+}

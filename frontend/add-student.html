@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Student | Student Information Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="header">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🎓</div>
+        <div class="brand-text">
+          <h1>SIMS Dashboard</h1>
+          <p>Cloud Computing CA2 — Three-Tier Architecture</p>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Dashboard</a></li>
+        <li><a href="students.html" class="nav-link">Students Directory</a></li>
+        <li><a href="add-student.html" class="nav-link active">Add Student</a></li>
+      </ul>
+      <div id="backend-status-pill" class="backend-status-pill">
+        <span class="status-dot"></span>
+        <span id="backend-status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <div class="page-header" style="max-width: 680px; margin: 0 auto 1.5rem auto;">
+      <div class="page-title">
+        <h2>Add New Student Record</h2>
+        <p>Register a student into the MongoDB Atlas database via the Express REST API.</p>
+      </div>
+      <div>
+        <a href="students.html" class="btn btn-secondary btn-sm">&larr; Back to Directory</a>
+      </div>
+    </div>
+
+    <!-- Add Student Form Card -->
+    <div class="form-card">
+      <form id="student-form" novalidate>
+        <div class="form-grid">
+          
+          <!-- Student ID -->
+          <div class="form-group">
+            <label for="studentId" class="form-label">Student ID *</label>
+            <input
+              type="text"
+              id="studentId"
+              name="studentId"
+              class="form-input"
+              placeholder="e.g. STU101"
+              required
+              autocomplete="off"
+            >
+            <span class="form-help">Unique 2-20 character ID</span>
+            <span id="err-studentId" class="form-error"></span>
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="e.g. Priya Sharma"
+              required
+              autocomplete="off"
+            >
+            <span class="form-help">At least 2 characters</span>
+            <span id="err-name" class="form-error"></span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="e.g. priya.sharma@example.edu"
+              required
+              autocomplete="off"
+            >
+            <span class="form-help">Valid institutional or personal email</span>
+            <span id="err-email" class="form-error"></span>
+          </div>
+
+          <!-- Department -->
+          <div class="form-group">
+            <label for="department" class="form-label">Department *</label>
+            <select id="department" name="department" class="form-select" required>
+              <option value="">-- Select Department --</option>
+              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics & Communication">Electronics & Communication</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Electrical Engineering">Electrical Engineering</option>
+            </select>
+            <span class="form-help">Approved degree program</span>
+            <span id="err-department" class="form-error"></span>
+          </div>
+
+          <!-- Semester -->
+          <div class="form-group">
+            <label for="semester" class="form-label">Semester *</label>
+            <select id="semester" name="semester" class="form-select" required>
+              <option value="">-- Select Current Semester --</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              <option value="3">Semester 3</option>
+              <option value="4">Semester 4</option>
+              <option value="5">Semester 5</option>
+              <option value="6">Semester 6</option>
+              <option value="7">Semester 7</option>
+              <option value="8">Semester 8</option>
+            </select>
+            <span class="form-help">Academic term (1 to 8)</span>
+            <span id="err-semester" class="form-error"></span>
+          </div>
+
+          <!-- Contact Number -->
+          <div class="form-group">
+            <label for="contact" class="form-label">Contact Number *</label>
+            <input
+              type="tel"
+              id="contact"
+              name="contact"
+              class="form-input"
+              placeholder="e.g. +91 9876543210"
+              required
+              autocomplete="off"
+            >
+            <span class="form-help">7 to 15 digits phone number</span>
+            <span id="err-contact" class="form-error"></span>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <a href="students.html" class="btn btn-secondary">Cancel</a>
+          <button type="submit" id="btn-submit" class="btn btn-primary">
+            <span>Add Student to Atlas</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Student Information Management System &bull; Cloud Computing CA2 Practical &bull; Antigravity Assisted</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>

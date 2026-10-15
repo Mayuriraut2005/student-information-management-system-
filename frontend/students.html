@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students Directory | Student Information Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="header">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">🎓</div>
+        <div class="brand-text">
+          <h1>SIMS Dashboard</h1>
+          <p>Cloud Computing CA2 — Three-Tier Architecture</p>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Dashboard</a></li>
+        <li><a href="students.html" class="nav-link active">Students Directory</a></li>
+        <li><a href="add-student.html" class="nav-link">Add Student</a></li>
+      </ul>
+      <div id="backend-status-pill" class="backend-status-pill">
+        <span class="status-dot"></span>
+        <span id="backend-status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <div class="page-header">
+      <div class="page-title">
+        <h2>Students Directory</h2>
+        <p>Search, view, update, and manage student records stored in MongoDB Atlas.</p>
+      </div>
+      <div class="page-actions">
+        <a href="add-student.html" class="btn btn-primary">+ Add New Student</a>
+      </div>
+    </div>
+
+    <!-- Table Card with Search & Filters -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="filter-group">
+          <input
+            type="text"
+            id="search-input"
+            class="input-search"
+            placeholder="Search by ID, Name, Email, or Department..."
+          >
+          <select id="department-filter" class="select-filter">
+            <option value="">All Departments</option>
+            <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics & Communication">Electronics & Communication</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+          </select>
+          <select id="semester-filter" class="select-filter">
+            <option value="">All Semesters</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+            <option value="8">Semester 8</option>
+          </select>
+          <button id="btn-reset-filters" class="btn btn-secondary btn-sm">Reset</button>
+        </div>
+        <div id="record-count-indicator" style="font-size: 0.85rem; color: var(--slate-600); font-weight: 500;">
+          Showing <span id="count-current">0</span> of <span id="count-total">0</span> students
+        </div>
+      </div>
+
+      <!-- Students Data Table -->
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Semester</th>
+              <th>Contact</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="students-table-body">
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 3rem;">
+                <div class="spinner"></div>
+                <p style="margin-top: 0.5rem; color: var(--slate-400);">Loading students from MongoDB Atlas...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- View Student Details Modal -->
+  <div id="modal-view-student" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Student Details</h3>
+        <button class="modal-close" onclick="closeModal('modal-view-student')">&times;</button>
+      </div>
+      <dl id="student-details-list">
+        <!-- Injected via JavaScript -->
+      </dl>
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-view-student')">Close</button>
+        <a id="modal-edit-link" href="#" class="btn btn-primary">Edit Student</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="modal-delete-student" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color: var(--danger);">Confirm Record Deletion</h3>
+        <button class="modal-close" onclick="closeModal('modal-delete-student')">&times;</button>
+      </div>
+      <p style="margin-bottom: 1.25rem; font-size: 0.9rem; color: var(--slate-700);">
+        Are you sure you want to permanently delete student record
+        <strong id="delete-student-name">--</strong> (ID: <strong id="delete-student-id">--</strong>)?
+      </p>
+      <p style="font-size: 0.8rem; color: var(--slate-400); margin-bottom: 1.5rem;">
+        This action cannot be undone and will delete the record from MongoDB Atlas.
+      </p>
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-delete-student')">Cancel</button>
+        <button id="btn-confirm-delete" class="btn btn-danger">Yes, Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Student Information Management System &bull; Cloud Computing CA2 Practical &bull; Antigravity Assisted</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/students.js"></script>
+</body>
+</html>
