@@ -17,8 +17,8 @@ const CONFIG = {
       return 'http://localhost:5000/api';
     }
 
-    // Default placeholder for Render production backend (can be updated before Netlify deploy)
-    return 'https://student-backend-service.onrender.com/api';
+    // Live Render production backend Web Service URL
+    return 'https://student-information-management-system-3rok.onrender.com/api';
   })(),
 
   DEPARTMENTS: [
