@@ -91,14 +91,14 @@ if (process.env.NODE_ENV !== 'test') {
   // Connect to MongoDB Atlas
   connectDB()
     .then(() => {
-      server = app.listen(PORT, () => {
+      server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`[Server] Express Application Tier listening on port ${PORT}`);
         console.log(`[Server] Environment: ${process.env.NODE_ENV || 'development'}`);
         console.log(`[Server] Health Check available at http://localhost:${PORT}/api/health`);
       });
     })
     .catch((err) => {
-      console.error('[Server Startup Error] Could not connect to MongoDB Atlas. Exiting process.');
+      console.error('[Server Startup Error] Could not connect to MongoDB Atlas:', err.message);
       process.exit(1);
     });
 
