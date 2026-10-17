@@ -59,20 +59,6 @@
           <p>Academic Departments</p>
         </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-info">
-          <h3 id="stat-db-status">Checking...</h3>
-          <p>Database Health (Atlas)</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-info">
-          <h3 id="stat-api-uptime">--</h3>
-          <p>API Server Uptime</p>
-        </div>
-      </div>
     </section>
 
     <!-- Recent Students Table -->
@@ -120,8 +106,6 @@
       const statusPill = document.getElementById('backend-status-pill');
       const statusText = document.getElementById('backend-status-text');
       const statTotal = document.getElementById('stat-total-students');
-      const statDb = document.getElementById('stat-db-status');
-      const statUptime = document.getElementById('stat-api-uptime');
       const tbody = document.getElementById('recent-students-tbody');
 
       // 1. Check API & DB Health
@@ -130,19 +114,12 @@
         if (health && health.success) {
           statusPill.className = 'backend-status-pill online';
           statusText.textContent = 'Backend: Online';
-          statDb.textContent = 'Connected';
-          statDb.style.color = 'var(--success)';
-          const seconds = health.data?.uptimeSeconds || 0;
-          statUptime.textContent = seconds > 60 ? `${Math.floor(seconds / 60)}m` : `${seconds}s`;
         } else {
           throw new Error('Health check failed');
         }
       } catch (err) {
         statusPill.className = 'backend-status-pill offline';
         statusText.textContent = 'Backend: Offline';
-        statDb.textContent = 'Disconnected';
-        statDb.style.color = 'var(--danger)';
-        statUptime.textContent = 'N/A';
       }
 
       // 2. Fetch Recent Students
