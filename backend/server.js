@@ -41,6 +41,11 @@ const corsOptions = {
       }
     }
 
+    // Allow any Netlify deployment
+    if (/^https:\/\/[a-z0-9-]+\.netlify\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
     // Check allowed origins list
     if (allowedOrigins.length === 0 || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
       return callback(null, true);
