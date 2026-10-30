@@ -142,3 +142,14 @@ These questions cover all key topics examiners test during evaluation: **Three-T
   1. **Presentation Tier:** Netlify's global edge CDN handles increased static traffic automatically without configuration.
   2. **Application Tier:** The Express backend on Render can be scaled horizontally by increasing the number of stateless container instances behind a load balancer.
   3. **Database Tier:** MongoDB Atlas can scale vertically (larger instance tier) or horizontally (sharded cluster with replica sets) to distribute read/write operations.
+
+---
+
+### Q19. How do you deploy and scale 5 containers on Render, and how does horizontal load balancing work?
+* **English Answer:**
+  1. **Render Container Architecture:** In Render, every web service runs inside an isolated Linux container. By default, a service runs on 1 container instance.
+  2. **Scaling to 5 Containers via Dashboard:** In the Render Dashboard, open the Web Service > navigate to **Scaling** > under **Manual Scaling**, set **Instances to 5** (or configure **Autoscaling** with Min: 1, Max: 5 based on CPU/RAM thresholds).
+  3. **Infrastructure as Code (Render Blueprint):** We also defined `render.yaml` in our repository specifying `numInstances: 5` and `plan: starter`.
+  4. **Load Balancing & Stateless Design:** Render automatically deploys a managed HTTPS load balancer in front of the 5 container replicas. Since our Express REST API is completely stateless (session state is not stored in process memory, and persistent data resides in MongoDB Atlas), any of the 5 containers can independently process any incoming request from Netlify.
+  5. **Docker Containerization:** We provided a multi-stage `Dockerfile` (using `node:18-alpine`) so Render can build and execute the backend as an OCI-compliant container with internal health checks.
+* **Hinglish Explanation:** Render par backend ek isolated Linux container me chalta hai. Horizontal scaling dikhane ke liye hum Render Dashboard ke **Scaling** tab me jakar instances ko 1 se badhakar 5 kar sakte hain, ya repository me `render.yaml` Blueprint file use karte hain jisme `numInstances: 5` likha hota hai. Render ek automatic Load Balancer lagata hai jo Netlify se aane wali requests ko 5 containers me baant deta hai. Kyunki humara Express backend stateless hai aur sara data MongoDB Atlas me rehta hai, 5 me se koi bhi container request handle kar sakta hai.

@@ -111,3 +111,47 @@ Examiners frequently ask: *"Is MCP part of the application runtime?"*
 > **Answer:** **No.** The **Model Context Protocol (MCP)** server (`mongodb-mcp-server`) runs strictly inside the developer's Antigravity IDE environment.
 > - **During Development:** MCP gives the AI coding agent read-only access to inspect the Atlas database schema, collection indices, and live statistics.
 > - **In Production:** The deployed web application running on Netlify and Render does **NOT** use or require MCP. The application interacts with MongoDB Atlas strictly via the Mongoose connection in the Express backend.
+
+---
+
+## 5. Horizontal Container Scaling (5 Replicas on Render)
+
+In cloud computing, **Horizontal Scaling (Scale-Out)** increases capacity by adding multiple container instances instead of increasing the size of a single virtual machine (Scale-Up).
+
+```mermaid
+graph TD
+    Netlify["Presentation Tier (Netlify Edge CDN)"]
+    
+    subgraph RenderPlatform ["Render Cloud Infrastructure"]
+        LB["Render Managed HTTPS Load Balancer (Round Robin)"]
+        
+        subgraph Containers ["5x Stateless Backend Containers"]
+            C1["Container Replica 1<br/>(Express API)"]
+            C2["Container Replica 2<br/>(Express API)"]
+            C3["Container Replica 3<br/>(Express API)"]
+            C4["Container Replica 4<br/>(Express API)"]
+            C5["Container Replica 5<br/>(Express API)"]
+        end
+    end
+    
+    Atlas[("Database Tier<br/>MongoDB Atlas Cluster")]
+
+    Netlify --> |HTTPS REST API| LB
+    LB --> C1
+    LB --> C2
+    LB --> C3
+    LB --> C4
+    LB --> C5
+    
+    C1 --> |TLS / Mongoose| Atlas
+    C2 --> |TLS / Mongoose| Atlas
+    C3 --> |TLS / Mongoose| Atlas
+    C4 --> |TLS / Mongoose| Atlas
+    C5 --> |TLS / Mongoose| Atlas
+```
+
+### Key Architectural Characteristics:
+1. **Stateless Backend:** No session state or uploaded files are held in local container storage. Every container replica can service any incoming request interchangeably.
+2. **Health Check Probing:** Render's load balancer continuously polls `/api/health` across all 5 containers. If any container becomes unresponsive, the load balancer removes it from rotation and restarts it.
+3. **Infrastructure as Code:** Defined in the root `render.yaml` with `numInstances: 5` and scaling bounds `minInstances: 1, maxInstances: 5`.
+4. **Docker Containerization:** Defined via `backend/Dockerfile` using lightweight Alpine Linux (`node:18-alpine`).

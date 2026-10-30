@@ -1,0 +1,38 @@
+# ==============================================================================
+# Render Blueprint Specification (Infrastructure-as-Code)
+# Project: Student Information Management System (SIMS)
+# Architecture: Three-Tier Cloud Architecture with Horizontal Container Scaling
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # Tier 2: Application Tier (Express.js REST API)
+  # Scaled to 5 Stateless Container Replicas behind Render Load Balancer
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: student-information-management-system-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: starter # Multi-instance scaling on Render requires Starter plan ($7/mo)
+    numInstances: 5 # Deploys 5 container instances across Render's cloud infrastructure
+    healthCheckPath: /api/health
+
+    # Horizontal Pod / Container Autoscaling policy
+    scaling:
+      minInstances: 1
+      maxInstances: 5
+      targetCPUPercent: 70
+      targetMemoryPercent: 75
+
+    # Environment Variables for Application Tier
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false # Injected securely from Render Environment dashboard
+      - key: FRONTEND_URL
+        value: https://luminous-profiterole-8b5610.netlify.app
