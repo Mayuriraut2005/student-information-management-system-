@@ -13,7 +13,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 4. Install production dependencies
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # 5. Copy backend source code into container
 COPY . .
